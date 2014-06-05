@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+user = ARGV[0]
+key = ARGV[1]
+
+exit 0

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/gopath/bin/gitreceived -r /tmp/repos /scripts/auth /scripts/receiver
