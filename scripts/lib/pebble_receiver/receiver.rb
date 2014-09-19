@@ -15,19 +15,19 @@ class PebbleReceiver::Receiver
     deploy
   end
   
+  def create_release
+    topic "Creating release..."
+  end
+  
   def setup_cache
-    @cache_path = "/tmp/cache/#{app}"
+    @cache_path = "/tmp/pebble-cache/#{app}"
     FileUtils.mkdir_p(cache_path)
   end
   
   def build_image
     @container_id = run!("docker run -i -a stdin -v #{cache_path}:/tmp/cache:rw pebbles/pebblerunner build")
     pipe!("docker attach #{container_id}", no_indent: true)
-  end
-  
-  def create_release
-    topic "Creating release..."
-  end
+  end  
   
   def deploy
     topic "Deploying..."

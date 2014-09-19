@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 
-user = ARGV[0]
-key = ARGV[1]
+# sync output
+$stdout.sync = true
 
-exit 0
+$:.unshift File.expand_path("../lib", __FILE__)
+require "pebble_receiver"
+
+# username, key
+# returns exit code, 0 for success
+exit PebbleReceiver::Auth.start(ARGV[0], ARGV[1])

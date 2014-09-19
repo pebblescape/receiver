@@ -7,7 +7,7 @@ set -x
 # Install gitreceived
 mkdir -p /gopath
 GOPATH=/gopath go get github.com/tools/godep
-GOPATH=/gopath go get github.com/flynn/gitreceived
+GOPATH=/gopath go get github.com/pebblescape/gitreceived
 
 echo -e "\nSuccess!"
 exit 0
