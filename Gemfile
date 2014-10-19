@@ -6,5 +6,7 @@ group :test do
   gem 'vcr'
   gem 'webmock'
   gem 'pry'
-  gem 'simplecov'
+  gem 'simplecov', require: false
+  gem 'simplecov-rcov', require: false
+  gem 'ci_reporter_rspec'
 end
