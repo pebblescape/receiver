@@ -9,12 +9,11 @@ module PebbleReceiver
       :put    => Net::HTTP::Put,
       :delete => Net::HTTP::Delete
     }
-
-    API_ENDPOINT = "http://#{ENV['MIKE_PORT_5000_TCP_ADDR']}:#{ENV['MIKE_PORT_5000_TCP_PORT']}"
-
+    
     attr_reader :http
 
-    def initialize(endpoint = API_ENDPOINT)
+    def initialize(endpoint = nil)
+      endpoint ||= "http://#{ENV['MIKE_PORT_5000_TCP_ADDR']}:#{ENV['MIKE_PORT_5000_TCP_PORT']}"
       uri = URI.parse(endpoint)
       @http = Net::HTTP.new(uri.host, uri.port)
     end

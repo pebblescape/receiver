@@ -1,0 +1,44 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://localhost:5000/auth?api_key&fingerprint=e2:2d:d6:1b:cc:86:2f:f8:e3:f6:97:ee:1d:53:bb:6a
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/vnd.pebblescape+json; version=1
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Content-Type:
+      - application/json; charset=utf-8
+      Etag:
+      - '"b6f73c448075a4962d020a26bba5c4d2"'
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 8330dcf1-f35c-4249-98db-d4933f9afab1
+      X-Runtime:
+      - '0.044246'
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"user":{"id":21,"name":"kris","active":false}}'
+    http_version: 
+  recorded_at: Sun, 19 Oct 2014 17:54:12 GMT
+recorded_with: VCR 2.9.3
