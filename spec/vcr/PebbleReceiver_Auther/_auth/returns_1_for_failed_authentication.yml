@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://localhost:5000/auth?api_key&fingerprint=56:6c:88:3f:d1:60:2b:70:a6:77:d9:b7:0f:e0:a4:a5
+    uri: http://localhost:5000/auth?api_key&fingerprint=30:0d:a6:45:a0:7c:57:ec:da:84:d7:a7:6e:47:7f:c7
     body:
       encoding: US-ASCII
       string: ''
@@ -29,14 +29,14 @@ http_interactions:
       Cache-Control:
       - no-cache
       X-Request-Id:
-      - 02fa1b42-bd04-4302-8098-647bebcf831a
+      - 1f3a9e69-0642-4078-9a6f-9578d6c91118
       X-Runtime:
-      - '0.064323'
+      - '0.249471'
       Transfer-Encoding:
       - chunked
     body:
       encoding: UTF-8
       string: '{"id":"invalid_ssh_key","message":"No such SSH key found."}'
     http_version: 
-  recorded_at: Sun, 19 Oct 2014 17:38:56 GMT
+  recorded_at: Thu, 23 Oct 2014 12:15:32 GMT
 recorded_with: VCR 2.9.3
