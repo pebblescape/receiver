@@ -3,8 +3,8 @@ require "pebble_receiver/auther"
 
 module PebbleReceiver  
   class Init
-    def self.start(path, commit)
-      PebbleReceiver::Receiver.new(path, commit)
+    def self.start(path, commit, user)
+      PebbleReceiver::Receiver.new(path, commit, user)
     end
   end
   

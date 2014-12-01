@@ -18,7 +18,7 @@ module PebbleReceiver
       @http = Net::HTTP.new(uri.host, uri.port)
     end
 
-    def request(method, path, params)
+    def request(method, path, params={})
       params.merge!({'api_key' => ENV['MIKE_AUTH_KEY']})
       
       case method

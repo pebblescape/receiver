@@ -14,7 +14,7 @@ class PebbleReceiver::Auther
   
   # return 0 for success, 1 for fail
   def auth
-    return 0 if sanity_check_key(key) && validate_key(key)
+    return 0 if sanity_check_key(key) && validate_key(user, key)
     return 1
   end
   
