@@ -1,5 +1,6 @@
 require 'net/http'
 require 'uri'
+require 'pebble_receiver/patches'
 
 module PebbleReceiver
   class Connection
@@ -9,7 +10,7 @@ module PebbleReceiver
       :put    => Net::HTTP::Put,
       :delete => Net::HTTP::Delete
     }
-    
+
     attr_reader :http
 
     def initialize(endpoint = nil)
@@ -20,16 +21,19 @@ module PebbleReceiver
 
     def request(method, path, params={})
       params.merge!({'api_key' => ENV['MIKE_AUTH_KEY']})
-      
+      params.merge!({'api_login' => ENV['RECEIVE_USER']}) if ENV['RECEIVE_USER'] # /receive script
+
       case method
       when :get
         full_path = path_with_params(path, params)
         request = VERB_MAP[method].new(full_path)
       else
         request = VERB_MAP[method].new(path)
-        request.set_form_data(params)
+        # request.set_form_data(params.to_http_params)
+        request.body = params.to_query
+        request.content_type = 'application/x-www-form-urlencoded'
       end
-      
+
       request['Accept'] = "application/vnd.pebblescape+json; version=1"
 
       http.request(request)
