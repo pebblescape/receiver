@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://localhost:5000/auth?api_key&fingerprint=30:0d:a6:45:a0:7c:57:ec:da:84:d7:a7:6e:47:7f:c7
+    uri: http://localhost:5000/auth?api_key=3cf455afbc3bb3b90e39453e0fbfd913b58e2de8ed48830fe7cd06c59a4fdc8f&fingerprint=30:0d:a6:45:a0:7c:57:ec:da:84:d7:a7:6e:47:7f:c7
     body:
       encoding: US-ASCII
       string: ''
@@ -29,9 +29,9 @@ http_interactions:
       Cache-Control:
       - no-cache
       X-Request-Id:
-      - c2bded30-fc0d-4707-998b-d58390b42a78
+      - dba1799e-84fa-4032-8e38-05925e1c6682
       X-Runtime:
-      - '0.304610'
+      - '0.007831'
       Set-Cookie:
       - __profilin=p%3Dt; path=/
       - __profilin=p%3Dt; path=/
@@ -41,5 +41,5 @@ http_interactions:
       encoding: UTF-8
       string: '{"id":"invalid_ssh_key","message":"No such SSH key found."}'
     http_version: 
-  recorded_at: Mon, 01 Dec 2014 12:27:59 GMT
+  recorded_at: Mon, 01 Dec 2014 12:31:31 GMT
 recorded_with: VCR 2.9.3

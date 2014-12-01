@@ -23,6 +23,7 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 ENV['MIKE_PORT_5000_TCP_ADDR'] = 'localhost'
 ENV['MIKE_PORT_5000_TCP_PORT'] = '5000'
+ENV['MIKE_AUTH_KEY'] = '3cf455afbc3bb3b90e39453e0fbfd913b58e2de8ed48830fe7cd06c59a4fdc8f'
 require 'pebble_receiver'
 
 RSpec.configure do |config|
