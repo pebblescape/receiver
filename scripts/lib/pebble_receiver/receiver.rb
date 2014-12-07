@@ -1,5 +1,6 @@
 require "fileutils"
 require "shellwords"
+require "json"
 require "pebble_receiver/mike_helpers"
 require "pebble_receiver/shell_helpers"
 
@@ -37,15 +38,20 @@ class PebbleReceiver::Receiver
     FileUtils.mkdir_p(cache_path)
   end
 
+  # TODO: offload everything after build to Mike
   def build_image
     @cid = run!("docker run -i -a stdin -v #{cache_path}:/tmp/cache:rw pebbles/pebblerunner build").gsub("\n", "")
     pipe!("docker attach #{cid}", no_indent: true)
     assert(container_success?(cid), "Build failed in container #{cid}")
 
-    @imgid = run!("docker commit #{cid} '#{imgtag}'").gsub("\n", "")
+    @imgid = run!("docker commit #{cid} #{imgtag}").gsub("\n", "")
     run!("docker rm #{cid}")
 
-    # @build = finish_build(app, build)
+    info = run!("docker run --rm -i -t #{imgid} info")
+    info = JSON.parse(info)
+
+    @build = finish_build(app, build, info['buildpack_name'], info['process_types'], info['app_size'])
+    assert(build['status'] == 'succeeded', "Finishing build #{build['id']} failed")
     topic "Commited build #{build['id']}..."
   end
 

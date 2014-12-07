@@ -17,6 +17,10 @@ module PebbleReceiver
     PUBRE = /^(ssh-[dr]s[as]\s+)|(\s+.+\@.+)|\n/
     COLONS = /(.{2})(?=.)/
 
+    STATUS_PENDING = 1
+    STATUS_FAILED = 2
+    STATUS_SUCCESS = 3
+
     def generate_fingerprint(key)
       pubkey = key.clone.gsub(PUBRE, '')
       pubkey = Digest::MD5.hexdigest(Base64.decode64(pubkey))
@@ -30,7 +34,7 @@ module PebbleReceiver
     end
 
     def create_build(app, commit)
-      data = { "commit" => commit, "status" => 1, "process_types" => { "web" => "test" }, "size" => 0 }
+      data = { "commit" => commit, "status" => STATUS_PENDING, "process_types" => { "web" => "test" }, "size" => 0 }
       res = Connection.new.request(:post, "/apps/#{app['id']}/builds", { "build" => data })
       return nil unless res.is_a?(Net::HTTPSuccess)
       JSON.parse(res.body)
@@ -38,11 +42,11 @@ module PebbleReceiver
 
     def fail_build(app, build)
       return if app.nil? || build.nil?
-      Connection.new.request(:put, "/apps/#{app['id']}/builds/#{build['id']}", { "build" => { "status" => 2 } })
+      Connection.new.request(:put, "/apps/#{app['id']}/builds/#{build['id']}", { "build" => { "status" => STATUS_FAILED } })
     end
 
-    def finish_build(app, build, desription, proctypes, size)
-      data = { "status" => 3, "process_types" => { "web" => "test" }, "size" => 0 }
+    def finish_build(app, build, description, proctypes, size)
+      data = { "status" => STATUS_SUCCESS, "process_types" => proctypes, "size" => size, "buildpack_description" => description }
       res = Connection.new.request(:put, "/apps/#{app['id']}/builds/#{build['id']}", { "build" => data })
       return nil unless res.is_a?(Net::HTTPSuccess)
       JSON.parse(res.body)
