@@ -1,5 +1,7 @@
 #!/bin/bash
-# export SSH_PRIVATE_KEYS="`sudo cat /etc/ssh/ssh_host_rsa_key`"
+
+SSH_PRIVATE_KEYS="${SSH_PRIVATE_KEYS:="`sudo cat /etc/ssh/ssh_host_rsa_key`"}"
+export SSH_PRIVATE_KEYS="$SSH_PRIVATE_KEYS"
 
 if [ -f /gopath/bin/gitreceived ];
 then
