@@ -2,25 +2,31 @@
 http_interactions:
 - request:
     method: get
-    uri: http://localhost:5000/auth?api_key=3cf455afbc3bb3b90e39453e0fbfd913b58e2de8ed48830fe7cd06c59a4fdc8f&fingerprint=66:f6:4b:b8:a6:0b:76:2e:da:66:0a:89:52:21:41:5b
+    uri: http://localhost:5000/auth?api_key=3cf455afbc3bb3b90e39453e0fbfd913b58e2de8ed48830fe7cd06c59a4fdc8f&fingerprint=66%3Af6%3A4b%3Ab8%3Aa6%3A0b%3A76%3A2e%3Ada%3A66%3A0a%3A89%3A52%3A21%3A41%3A5b
     body:
       encoding: US-ASCII
       string: ''
     headers:
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - application/vnd.pebblescape+json; version=1
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip
       User-Agent:
-      - Ruby
+      - pebblescape-receiver
+      X-Ruby-Version:
+      - 2.1.4
+      X-Ruby-Platform:
+      - x86_64-darwin14.0
   response:
     status:
       code: 200
-      message: OK
+      message: 
     headers:
       X-Frame-Options:
       - SAMEORIGIN
-      X-Xss-Protection:
+      X-XSS-Protection:
       - 1; mode=block
       X-Content-Type-Options:
       - nosniff
@@ -29,20 +35,16 @@ http_interactions:
       Cache-Control:
       - no-store, must-revalidate, private, max-age=0
       X-Request-Id:
-      - e67bfeec-3392-4975-866e-4fd427dc3e76
+      - 1c13512d-31dc-4f13-b2ec-c633ba095cc8
       X-Runtime:
-      - '0.013325'
+      - '0.026482'
       Set-Cookie:
-      - __profilin=p%3Dt; path=/
-      - __profilin=p%3Dt; path=/
-      - __profilin=p%3Dt; path=/
-      X-Miniprofiler-Ids:
-      - '["kyp5a52fw16i1g5r6w4q","8mohxc2dp66q9rlbcf38","suwf84t47knfo8en36a8","6gmtjitgiwy8zgt7wf8f","cpi77d6oowhv0lzqw3ie","pq819j6ruf4kpi0vy2kp","xpi8f0iufid9nnleqj2t","l0gdwmef1aoerlgq6k30","dgvhaf3qjt3v4v1i8xyk"]'
-      Transfer-Encoding:
-      - chunked
+      - __profilin=p%3Dt; path=/, __profilin=p%3Dt; path=/, __profilin=p%3Dt; path=/
+      X-MiniProfiler-Ids:
+      - '["ahdybfpjovzjjxnqqqoc","2ujnasbiv4fvgnf5eto2","7pn2isqac55qsnhoudbn","k29mywt7ywu0nx06ihmv","wo4gxjfh77etfhg5znzr","izoor91nozb6pd4ktnas","6k6yilq2fnod6uqx7yrv","zpdxic754poihgj0q3x8","zijluyfqxoi2s1bcv1cf","odutyetitqtttdboqk7v"]'
     body:
       encoding: UTF-8
       string: '{"id":"8b5c9eab-d26d-4d7b-86ce-58cf1efcdf36","login":"kris","email":"mail@rang.ee","active":true}'
     http_version: 
-  recorded_at: Mon, 01 Dec 2014 12:31:31 GMT
+  recorded_at: Tue, 09 Dec 2014 20:41:25 GMT
 recorded_with: VCR 2.9.3
