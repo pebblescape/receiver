@@ -1,12 +1,11 @@
 #!/bin/bash
 
-SSH_PRIVATE_KEYS="${SSH_PRIVATE_KEYS:="`sudo cat /etc/ssh/ssh_host_rsa_key`"}"
-export SSH_PRIVATE_KEYS="$SSH_PRIVATE_KEYS"
-
 if [ -f /gopath/bin/gitreceived ];
 then
   /gopath/bin/gitreceived -r /tmp/pebble-repos /scripts/auth /scripts/receiver
 else
+  SSH_PRIVATE_KEYS="${SSH_PRIVATE_KEYS:="`sudo cat /etc/ssh/ssh_host_rsa_key`"}"
+  export SSH_PRIVATE_KEYS="$SSH_PRIVATE_KEYS"
   export MIKE_PORT_5000_TCP_ADDR="localhost"
   export MIKE_PORT_5000_TCP_PORT="5000"
   export MIKE_AUTH_KEY="d1e38310d1126bcefd142ffff1223510c0fee97a72fe9cb50995c3772f36bb76"
