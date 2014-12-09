@@ -2,14 +2,13 @@ require 'net/http'
 require 'digest/md5'
 require 'base64'
 require 'json'
-require "pebble_receiver/connection"
+require 'excon'
 
 module PebbleReceiver
   module MikeHelpers
     def validate_key(user, key)
       fingerprint = generate_fingerprint(key)
-      res = Connection.new.request(:get, "/auth", { fingerprint: fingerprint})
-      return false unless res.is_a?(Net::HTTPSuccess)
+      res = get("/auth", { fingerprint: fingerprint })
       resp = JSON.parse(res.body)
       user == resp['login']
     end
@@ -24,21 +23,51 @@ module PebbleReceiver
     end
 
     def get_app(app)
-      res = Connection.new.request(:get, "/apps/#{app}")
-      return nil unless res.is_a?(Net::HTTPSuccess)
+      res = get("/apps/#{app}")
       JSON.parse(res.body)
     end
 
-    def create_build(app, commit, cid)
+    def post_push(app, commit, cid)
       data = { "cid" => cid, "build" => { "commit" => commit } }
-      res = Connection.new.request(:post, "/apps/#{app['id']}/builds", data)
-      return nil unless res.is_a?(Net::HTTPSuccess)
+      res = post("/apps/#{app['id']}/push", data)
       JSON.parse(res.body)
     end
 
-    def fail_build(app)
-      # return if app.nil? || build.nil?
-      # Connection.new.request(:put, "/apps/#{app['id']}/builds/#{build['id']}", { "build" => { "status" => STATUS_FAILED } })
+    # HTTP methods
+
+    def endpoint
+      "http://#{ENV['MIKE_PORT_5000_TCP_ADDR']}:#{ENV['MIKE_PORT_5000_TCP_PORT']}"
+    end
+
+    def headers
+      {
+        'Accept'                => 'application/vnd.pebblescape+json; version=1',
+        'Content-Type'          => 'application/json',
+        'Accept-Encoding'       => 'gzip',
+        'User-Agent'            => 'pebblescape-receiver',
+        'X-Ruby-Version'        => RUBY_VERSION,
+        'X-Ruby-Platform'       => RUBY_PLATFORM
+      }
+    end
+
+    def auth_query(query)
+      auth = {'api_key' => ENV['MIKE_AUTH_KEY']}
+      auth['api_login'] = ENV['RECEIVE_USER'] if ENV['RECEIVE_USER'] # /receive script
+      query.merge(auth)
+    end
+
+    def get(path, query={})
+      Excon.get(endpoint, headers: headers, expects: 200, path: path, query: auth_query(query))
+    end
+
+    def post(path, body={})
+      Excon.new(endpoint, headers: headers).request(
+        method: :post,
+        expects: 200,
+        path: path,
+        query: auth_query({}),
+        body: body.to_json
+      )
     end
   end
 end

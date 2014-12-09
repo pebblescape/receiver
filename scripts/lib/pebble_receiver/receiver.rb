@@ -15,12 +15,8 @@ class PebbleReceiver::Receiver
 
     fetch_app
     setup_cache
-    build_image
-    deploy
-  rescue SystemExit
-    fail_build(app)
+    push
   rescue Exception => e
-    fail_build(app)
     error(e.message)
   end
 
@@ -35,18 +31,14 @@ class PebbleReceiver::Receiver
     FileUtils.mkdir_p(cache_path)
   end
 
-  def build_image
+  def push
     @cid = run!("docker run -i -a stdin -v #{cache_path}:/tmp/cache:rw pebbles/pebblerunner build").gsub("\n", "")
     pipe!("docker attach #{cid}", no_indent: true)
 
-    @build = create_build(app, commit, cid)
+    @build = post_push(app, commit, cid)
     assert(build['status'] == 'succeeded', "Build #{build['id']} failed")
 
-    topic "Created build #{build['id']}..."
-  end
-
-  def deploy
-    topic "Deployed release..."
+    topic "Build #{build['id']} succeeded"
   end
 
   def assert(value, message="Assertion failed")
