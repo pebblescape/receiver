@@ -55,7 +55,7 @@ module PebbleReceiver
 
     def auth_query(query)
       auth = {'api_key' => ENV['MIKE_AUTH_KEY']}
-      auth['api_login'] = ENV['RECEIVE_USER'] if ENV['RECEIVE_USER'] # /receive script
+      auth['api_login'] = ENV['RECEIVE_AUTH'] if ENV['RECEIVE_AUTH'] # /receive script
       query.merge(auth)
     end
 
