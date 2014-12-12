@@ -8,7 +8,7 @@ class PebbleReceiver::Receiver
   include PebbleReceiver::MikeHelpers
   include PebbleReceiver::ShellHelpers
 
-  attr_accessor :name, :commit, :repo, :user, :cache_path, :cid, :app, :build
+  attr_accessor :name, :commit, :repo, :user, :cache_path, :cid, :app, :build, :release
 
   def initialize(path, commit, user)
     @name, @commit, @user = path, commit, user
@@ -35,10 +35,11 @@ class PebbleReceiver::Receiver
     @cid = run!("docker run -i -a stdin -v #{cache_path}:/tmp/cache:rw pebbles/pebblerunner build").gsub("\n", "")
     pipe!("docker attach #{cid}", no_indent: true)
 
-    @build = post_push(app, commit, cid)
+    @release = post_push(app, commit, cid)
+    @build = release['build']
     assert(build['status'] == 'succeeded', "Build #{build['id']} failed")
 
-    topic "Build #{build['id']} succeeded"
+    topic "Release v#{release['version']} deployed"
   end
 
   def assert(value, message="Assertion failed")

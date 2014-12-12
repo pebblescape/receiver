@@ -6,11 +6,11 @@ require 'excon'
 
 module PebbleReceiver
   module MikeHelpers
-    def validate_key(user, key)
+    def validate_key(key)
       fingerprint = generate_fingerprint(key)
       res = get("/auth", { fingerprint: fingerprint })
       resp = JSON.parse(res.body)
-      user == resp['login']
+      p resp['login']
     end
 
     PUBRE = /^(ssh-[dr]s[as]\s+)|(\s+.+\@.+)|\n/
