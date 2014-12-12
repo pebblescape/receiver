@@ -9,8 +9,9 @@ module PebbleReceiver
     def validate_key(key)
       fingerprint = generate_fingerprint(key)
       res = get("/auth", { fingerprint: fingerprint })
+      return nil unless res.status == 200
       resp = JSON.parse(res.body)
-      p resp['login']
+      puts resp['email']
     end
 
     PUBRE = /^(ssh-[dr]s[as]\s+)|(\s+.+\@.+)|\n/
@@ -24,12 +25,14 @@ module PebbleReceiver
 
     def get_app(app)
       res = get("/apps/#{app}")
+      return nil unless res.status == 200
       JSON.parse(res.body)
     end
 
     def post_push(app, commit, cid)
       data = { "cid" => cid, "build" => { "commit" => commit } }
       res = post("/apps/#{app['id']}/push", data)
+      return res.body unless res.status == 200
       JSON.parse(res.body)
     end
 
@@ -57,13 +60,12 @@ module PebbleReceiver
     end
 
     def get(path, query={})
-      Excon.get(endpoint, headers: headers, expects: 200, path: path, query: auth_query(query))
+      Excon.get(endpoint, headers: headers, path: path, query: auth_query(query))
     end
 
     def post(path, body={})
       Excon.new(endpoint, headers: headers).request(
         method: :post,
-        expects: 200,
         path: path,
         query: auth_query({}),
         body: body.to_json

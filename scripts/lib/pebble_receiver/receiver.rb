@@ -36,8 +36,8 @@ class PebbleReceiver::Receiver
     pipe!("docker attach #{cid}", no_indent: true)
 
     @release = post_push(app, commit, cid)
-    @build = release['build']
-    assert(build['status'] == 'succeeded', "Build #{build['id']} failed")
+    # @build = release['build']
+    assert(release.is_a?(Hash), "Release failed: #{release}")
 
     topic "Release v#{release['version']} deployed"
   end

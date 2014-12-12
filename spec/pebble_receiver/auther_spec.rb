@@ -7,7 +7,7 @@ describe PebbleReceiver::Auther, :vcr do
   context '.auth' do
     it 'returns 1 for failed authentication' do
       expect_any_instance_of(PebbleReceiver::Auther).to receive(:validate_key).and_call_original
-      expect{ PebbleReceiver::Auth.start('dumb', fakekey) }.to raise_error(Excon::Errors::NotFound)
+      expect(PebbleReceiver::Auth.start('dumb', fakekey)).to eq(1)
     end
 
     it 'returns 0 for successful authentication' do
@@ -15,9 +15,9 @@ describe PebbleReceiver::Auther, :vcr do
       expect(PebbleReceiver::Auth.start('kris', key)).to eq(0)
     end
 
-    it 'returns 1 for wrong username' do
+    it 'returns 0 for wrong username' do
       expect_any_instance_of(PebbleReceiver::Auther).to receive(:validate_key).and_call_original
-      expect(PebbleReceiver::Auth.start('notkris', key)).to eq(1)
+      expect(PebbleReceiver::Auth.start('notkris', key)).to eq(0)
     end
 
     it 'returns 1 for obviously invalid key without calling Mike' do
