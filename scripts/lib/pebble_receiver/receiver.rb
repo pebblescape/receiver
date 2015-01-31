@@ -32,7 +32,7 @@ class PebbleReceiver::Receiver
   end
 
   def push
-    @cid = run!("docker run -i -a stdin -u app -v #{cache_path}:/tmp/cache:rw pebbles/pebblerunner build").gsub("\n", "")
+    @cid = run!("docker run -i -a stdin -v #{cache_path}:/tmp/cache:rw pebbles/pebblerunner build").gsub("\n", "")
     pipe!("docker attach #{cid}", no_indent: true)
 
     @release = post_push(app, commit, cid)
