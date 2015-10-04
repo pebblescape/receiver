@@ -1,0 +1,1 @@
+web: bundle exec puma scripts/config.ru

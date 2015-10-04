@@ -1,6 +1,15 @@
 require "shellwords"
 require "pathname"
 
+class BuildpackError < StandardError
+end
+
+class NoShellEscape < String
+  def shellescape
+    self
+  end
+end
+
 module PebbleReceiver
   module ShellHelpers
     @@user_env_hash = {}
@@ -32,21 +41,13 @@ module PebbleReceiver
       end
     end
 
-    # display error message and stop the build process
-    # @param [String] error message
-    def error(message)
-      Kernel.puts " !"
-      message.split("\n").each do |line|
-        Kernel.puts " !     #{line.strip}"
-      end
-      Kernel.puts " !"
-      log "exit", :error => message if respond_to?(:log)
-      exit 1
-    end
-
     def run!(command, options = {})
-      result = run(command, options)
-      error("Command: '#{command}' failed unexpectedly:\n#{result}") unless $?.success?
+      result      = run(command, options)
+      error_class = options.delete(:error_class) || StandardError
+      unless $?.success?
+        message = "Command: '#{command}' failed unexpectedly:\n#{result}"
+        raise error_class, message
+      end
       return result
     end
 
@@ -86,27 +87,15 @@ module PebbleReceiver
     # @param [String] command to be run
     def pipe(command, options = {})
       output = ""
-      mode = options[:pipe_stdin] ? 'r+' : 'r'
-      IO.popen(command_options_to_string(command, options), mode) do |io|
-        if options[:pipe_stdin]
-          io.write STDIN.read
-          io.close_write
-        end
-        
+      IO.popen(command_options_to_string(command, options)) do |io|
         until io.eof?
           buffer = io.gets
           output << buffer
-          options[:no_indent] ? Kernel.puts(buffer) : puts(buffer)
+          puts buffer
         end
       end
 
       output
-    end
-    
-    def pipe!(command, options = {})
-      result = pipe(command, options)
-      exit 1 unless $?.success?
-      return result
     end
 
     # display a topic message
@@ -121,7 +110,7 @@ module PebbleReceiver
     # (indented by 6 spaces)
     # @param [String] message to be displayed
     def puts(message)
-      message.split("\n").each do |line|
+      message.to_s.split("\n").each do |line|
         super "       #{line.strip}"
       end
       $stdout.flush
@@ -129,11 +118,16 @@ module PebbleReceiver
 
     def warn(message, options = {})
       if options.key?(:inline) ? options[:inline] : false
-        topic "Warning:"
+        Kernel.puts "###### WARNING:"
         puts message
+        Kernel.puts ""
       end
       @warnings ||= []
       @warnings << message
+    end
+
+    def error(message)
+      raise BuildpackError, message
     end
 
     def deprecate(message)

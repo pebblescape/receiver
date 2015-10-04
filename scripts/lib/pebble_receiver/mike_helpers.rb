@@ -23,8 +23,14 @@ module PebbleReceiver
       pubkey.gsub!(COLONS, '\1:')
     end
 
-    def get_app(app)
-      res = get("/apps/#{app}")
+    def get_user(auth={})
+      res = get("/user", {}, auth)
+      return nil unless res.status == 200
+      JSON.parse(res.body)
+    end
+
+    def get_app(app, auth={})
+      res = get("/apps/#{app}", {}, auth)
       return nil unless res.status == 200
       JSON.parse(res.body)
     end
@@ -59,8 +65,9 @@ module PebbleReceiver
       query.merge(auth)
     end
 
-    def get(path, query={})
-      Excon.get(endpoint, headers: headers, path: path, query: auth_query(query))
+    def get(path, query={}, auth={})
+      qry = auth.empty? ? auth_query(query) : query.merge(auth)
+      Excon.get(endpoint, headers: headers, path: path, query: qry)
     end
 
     def post(path, body={})
